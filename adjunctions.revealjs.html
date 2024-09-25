@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>adjunctions</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/black.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+
+<section id="categories" class="slide level1">
+<h1>Categories</h1>
+<p><img src="cat/category.svg" class="center" align=middle height=200></p>
+<p>A <strong>category</strong> consists of</p>
+<ul>
+<li>a collection of objects x, y, z,..</li>
+<li>a collection of morphisms f, g, h,...</li>
+</ul>
+<p>so that</p>
+<ul>
+<li>Each morphism has a speciﬁed domain and codomain among the
+collection of ob- jects. The notation <span
+class="math inline"><em>f</em> : <em>x</em> → <em>y</em></span> signiﬁes
+that <span class="math inline"><em>f</em></span> is a morphism with
+domain <span class="math inline"><em>x</em></span> and codomain <span
+class="math inline"><em>y</em></span>.</li>
+<li>Each object has a designated identity morphism <span
+class="math inline"><em>i</em><em>d</em><sub><em>y</em></sub> : <em>y</em> → <em>y</em></span>.</li>
+<li>For any composable pair of morphisms, i.e., for any pair f, g with
+the codomain of f equal to the domain of g, there exists a specified
+composite morphism <span
+class="math inline"><em>g</em> ⋅ <em>f</em></span>,</li>
+</ul>
+<p>such that the composition is associative (<span
+class="math inline">(<em>h</em> ⋅ <em>g</em>) ⋅ <em>f</em> = <em>h</em> ⋅ (<em>g</em> ⋅ <em>f</em>)</span>)
+and identity is the neutral element of it (<span
+class="math inline"><em>i</em><em>d</em> ⋅ <em>f</em> = <em>f</em></span>,
+<span
+class="math inline"><em>g</em> ⋅ <em>i</em><em>d</em> = <em>g</em></span>)</p>
+</section>
+<section id="opposite-category" class="slide level1">
+<h1>Opposite category</h1>
+<p><img src="cat/opposite-category.svg" class="center" align=middle height=350></p>
+<p>Given a category <span class="math inline"><em>C</em></span>, the
+<strong>opposite category</strong> <span
+class="math inline"><em>C</em><sup><em>o</em><em>p</em></sup></span> is
+defined as follows: its objects are the same as objects of <span
+class="math inline"><em>C</em></span> and its morphisms are reversed
+morphisms of <span class="math inline"><em>C</em></span> (have their
+domains and codomains swapped).</p>
+<p>Also the composition in <span
+class="math inline"><em>C</em><sup><em>o</em><em>p</em></sup></span> is
+reversed: for a morphism <span
+class="math inline"><em>g</em> ⋅ <em>f</em></span> in <span
+class="math inline"><em>C</em></span> we have <span
+class="math inline"><em>f</em><sup><em>o</em><em>p</em></sup> ⋅ <em>g</em><sup><em>o</em><em>p</em></sup></span>
+in <span
+class="math inline"><em>C</em><sup><em>o</em><em>p</em></sup></span>.</p>
+</section>
+<section id="product-category" class="slide level1">
+<h1>Product category</h1>
+<p><img src="cat/product-category.svg" class="center" align=middle height=350></p>
+<p>Given two categories <span class="math inline"><em>C</em></span> and
+<span class="math inline"><em>D</em></span> the <strong>product
+category</strong> <span
+class="math inline"><em>C</em><em>x</em><em>D</em></span> is defined as
+follows:</p>
+<ul>
+<li>its objects <span
+class="math inline"> &lt; <em>c</em>, <em>d</em>&gt;</span> are all
+possible pairs of objects from <span
+class="math inline"><em>C</em></span> and <span
+class="math inline"><em>D</em></span></li>
+<li>its morphisms <span
+class="math inline"> &lt; <em>f</em>, <em>g</em>&gt;</span> are all
+possible pairs of morphisms from <span
+class="math inline"><em>C</em></span> and <span
+class="math inline"><em>D</em></span>.</li>
+</ul>
+<p>Identity and composition are defined component-wise.</p>
+</section>
+<section id="functors" class="slide level1">
+<h1>Functors</h1>
+<p><img src="fun/functor.svg" class="center" align=middle height=350></p>
+<p>Given two categories <span class="math inline"><em>C</em></span> and
+<span class="math inline"><em>D</em></span>, a <strong>functor</strong>
+<span class="math inline"><em>F</em> : <em>C</em> → <em>D</em></span> is
+two functions:</p>
+<ul>
+<li>a mapping of objects such that for any <span
+class="math inline"><em>c</em> ∈ <em>C</em></span> there is an object
+<span class="math inline"><em>F</em><em>c</em> ∈ <em>D</em></span></li>
+<li>a mapping of morphisms: for any <span
+class="math inline"><em>a</em>, <em>b</em> ∈ <em>C</em></span> and a
+morphism <span
+class="math inline"><em>f</em> : <em>a</em> → <em>b</em></span> there is
+a morphism in <span class="math inline"><em>D</em></span> denoted <span
+class="math inline"><em>F</em><em>f</em> : <em>F</em><em>a</em> → <em>F</em><em>b</em></span></li>
+</ul>
+<p>such that identities and compositions are preserved: <span
+class="math inline"><em>F</em><em>i</em><em>d</em> = <em>i</em><em>d</em></span>,
+<span
+class="math inline"><em>F</em>(<em>g</em> ⋅ <em>f</em>) = <em>F</em><em>g</em> ⋅ <em>F</em><em>f</em></span></p>
+</section>
+<section id="important-special-kinds-of-functors" class="slide level1">
+<h1>Important special kinds of functors</h1>
+<ul>
+<li>Given a category <span class="math inline"><em>C</em></span> a
+functor <span
+class="math inline"><em>F</em> : <em>C</em> → <em>C</em></span> is
+called an <strong>endofunctor</strong>.</li>
+<li>A functor from an opposite category <span
+class="math inline"><em>F</em> : <em>C</em><sup><em>o</em><em>p</em></sup> → <em>D</em></span>
+is called a <strong>contravariant functor</strong>.</li>
+<li>A functor from a regular (neiter opposite nor a product) is
+sometimes called a <strong>covariant functor</strong>. In practice we
+usually do not expicitly mention the morphism of <span
+class="math inline"><em>C</em><sup><em>o</em><em>p</em></sup></span>,
+describing a mapping of morphisms from <span
+class="math inline"><em>C</em></span> directly instead.</li>
+<li>A functor from a product category <span
+class="math inline"><em>F</em> : <em>C</em><em>x</em><em>D</em> → <em>E</em></span>
+is called a <strong>bifunctor</strong>. It is possible to get new
+functors by fixing an object from a component of the product.</li>
+<li>A functor of the kind <span
+class="math inline"><em>F</em> : <em>C</em><sup><em>o</em><em>p</em></sup><em>x</em><em>D</em> → <em>S</em><em>e</em><em>t</em></span>
+is called a <strong>profunctor</strong>. Important profunctors:
+<ul>
+<li><span
+class="math inline"><em>H</em><em>o</em><em>m</em>(−, =) : <em>C</em><sup><em>o</em><em>p</em></sup><em>x</em><em>C</em> → <em>S</em><em>e</em><em>t</em></span>
+that sends a pair of objects <span class="math inline"><em>a</em></span>
+and <span class="math inline"><em>b</em></span> in <span
+class="math inline"><em>C</em></span> to the set of morphisms <span
+class="math inline"><em>H</em><em>o</em><em>m</em>(<em>a</em>, <em>b</em>)</span>
+and sends a pair of morphisms <span
+class="math inline"> &lt; <em>f</em>, <em>h</em>&gt;</span> to the
+function on hom-sets defined as <span
+class="math inline"><em>g</em> → <em>h</em> ⋅ <em>g</em> ⋅ <em>f</em></span></li>
+<li>A generalization <span
+class="math inline"><em>H</em><em>o</em><em>m</em>(<em>F</em>−, <em>G</em>=)</span>
+is possible where both <span class="math inline"><em>F</em></span> and
+<span class="math inline"><em>G</em></span> are covariant. It sends
+pairs of objects <span
+class="math inline"> &lt; <em>a</em>, <em>b</em>&gt;</span> to <span
+class="math inline"><em>H</em><em>o</em><em>m</em>(<em>F</em><em>a</em>, <em>G</em><em>b</em>)</span>
+and pairs of morphisms <span
+class="math inline"> &lt; <em>f</em>, <em>h</em>&gt;</span> to functions
+<span
+class="math inline"><em>g</em> → <em>G</em><em>h</em> ⋅ <em>g</em> ⋅ <em>F</em><em>f</em></span></li>
+</ul></li>
+</ul>
+</section>
+<section id="natural-transformations" class="slide level1">
+<h1>Natural transformations</h1>
+<p><img src="nat/natural-transformation.svg" class="center" align=middle height=350></p>
+<p>Given two categories <span class="math inline"><em>C</em></span> and
+<span class="math inline"><em>D</em></span> and two functors <span
+class="math inline"><em>F</em>, <em>G</em> : <em>C</em> → <em>D</em></span>
+a <strong>natural transformation</strong> <span
+class="math inline"><em>α</em></span> is a family of morphisms such as
+<span class="math inline"><em>α</em><sub><em>x</em></sub></span> (known
+as the component of <span class="math inline"><em>α</em></span> at <span
+class="math inline"><em>x</em></span>) for any object <span
+class="math inline"><em>x</em> ∈ <em>C</em></span> such that the
+following condition holds for any <span
+class="math inline"><em>a</em>, <em>b</em> ∈ <em>C</em></span> and <span
+class="math inline"><em>f</em> ∈ <em>H</em><em>o</em><em>m</em>(<em>a</em>, <em>b</em>)</span>,
+known as the naturality square:</p>
+<p><span
+class="math inline"><em>α</em><sub><em>b</em></sub> ⋅ <em>F</em><em>f</em> = <em>G</em><em>f</em> ⋅ <em>α</em><sub><em>a</em></sub></span></p>
+<p>Given several functors <span
+class="math inline"><em>F</em>, <em>G</em>, <em>H</em> : <em>C</em> → <em>D</em></span>
+and composable pairs of natural transformations <span
+class="math inline"><em>α</em> : <em>F</em> → <em>G</em></span>, <span
+class="math inline"><em>β</em> : <em>G</em> → <em>H</em></span>,
+identity natural transformations for every functor and compositions of
+natural transformations (called "vertical compositions") can be
+defined.</p>
+</section>
+<section id="horizontal-composition-of-natural-transformations"
+class="slide level1">
+<h1>Horizontal composition of natural transformations</h1>
+<p><img src="nat/horizontal-composition.svg" class="center" align=middle height=300></p>
+<p>Given categories <span class="math inline"><em>C</em></span>, <span
+class="math inline"><em>D</em></span>, <span
+class="math inline"><em>E</em></span>, functors <span
+class="math inline"><em>F</em>, <em>F</em>′ : <em>C</em> → <em>D</em></span>
+and <span
+class="math inline"><em>G</em>, <em>G</em>′ : <em>D</em> → <em>E</em></span>
+it is possible to define <strong>horizontal composition</strong> of
+natural transformations <span
+class="math inline"><em>α</em> : <em>F</em> → <em>F</em>′</span> and
+<span class="math inline"><em>β</em> : <em>G</em> → <em>G</em>′</span>
+written as <span class="math inline"><em>β</em> ∘ <em>α</em></span> (a
+natural transformation itself).</p>
+<p>Its components are given in one of two equivalent ways <span
+class="math inline">(<em>β</em> ∘ <em>α</em>)<sub><em>x</em></sub> = <em>β</em><sub><em>F</em>′<em>x</em></sub> ⋅ <em>G</em>(<em>α</em><sub><em>x</em></sub>) = <em>G</em>′(<em>α</em><sub><em>x</em></sub>) ⋅ <em>β</em><sub><em>F</em><em>x</em></sub></span></p>
+<p>There are important special cases if one of the natural
+transformation is an identity:</p>
+<ul>
+<li>if <span class="math inline"><em>α</em> = <em>F</em></span> then
+<span
+class="math inline">(<em>β</em> ∘ <em>F</em>)<sub><em>x</em></sub> = <em>β</em><sub><em>F</em><em>x</em></sub></span></li>
+<li>if <span class="math inline"><em>β</em> = <em>G</em></span> then
+<span
+class="math inline">(<em>G</em> ∘ <em>α</em>)<sub><em>x</em></sub> = <em>G</em>(<em>α</em><sub><em>x</em></sub>)</span></li>
+</ul>
+</section>
+<section id="monads-and-comonads" class="slide level1">
+<h1>Monads and comonads</h1>
+<ul>
+<li>A monad over category <span class="math inline"><em>C</em></span> is
+a triple of <span
+class="math inline">(<em>M</em> : <em>C</em> → <em>C</em>, <em>η</em> : <em>I</em> → <em>M</em>, <em>μ</em> : <em>M</em><em>M</em> → <em>M</em>)</span>
+<ul>
+<li>such that <span
+class="math inline"><em>μ</em> ⋅ (<em>η</em> ∘ <em>M</em>) = <em>μ</em> ⋅ (<em>M</em> ∘ <em>η</em>) = <em>M</em></span>
+and <span
+class="math inline"><em>μ</em> ⋅ (<em>μ</em> ∘ <em>M</em>) = <em>μ</em> ⋅ (<em>M</em> ∘ <em>μ</em>)</span></li>
+</ul></li>
+<li>A comonad over category <span class="math inline"><em>C</em></span>
+is a triple of <span
+class="math inline">(<em>W</em> : <em>C</em> → <em>C</em>, <em>ε</em> : <em>W</em> → <em>I</em>, <em>δ</em> : <em>W</em> → <em>W</em><em>W</em>)</span>
+<ul>
+<li>such that <span
+class="math inline">(<em>ε</em> ∘ <em>W</em>) ⋅ <em>δ</em> = (<em>W</em> ∘ <em>ε</em>) ⋅ <em>δ</em> = <em>W</em></span>
+and <span
+class="math inline">(<em>δ</em> ∘ <em>W</em>) ⋅ <em>δ</em> = (<em>W</em> ∘ <em>δ</em>) ⋅ <em>δ</em></span></li>
+</ul></li>
+</ul>
+</section>
+<section id="adjunctions-as-hom-set-isomoprhisms" class="slide level1">
+<h1>Adjunctions as hom-set isomoprhisms</h1>
+<p><img src="adjunctions-hom-iso.svg" class="center" align=middle height=350></p>
+<p><strong>Definition A1</strong>: An adjunction between functors <span
+class="math inline"><em>L</em> : <em>C</em> → <em>D</em></span> and
+<span class="math inline"><em>R</em> : <em>D</em> → <em>C</em></span>
+(denoted <span class="math inline"><em>L</em> ⊣ <em>R</em></span>) is a
+natural isomorphism of hom-sets <span
+class="math inline"><em>C</em>(<em>L</em><em>d</em>, <em>c</em>)</span>
+and <span
+class="math inline"><em>D</em>(<em>c</em>, <em>R</em><em>d</em>)</span></p>
+<p><span
+class="math inline"><em>φ</em><sub><em>d</em>, <em>c</em></sub>(<em>f</em>) = <em>g</em></span>
+is called the right adjunct of <span
+class="math inline"><em>f</em></span></p>
+<p><span
+class="math inline"><em>ψ</em><sub><em>d</em>, <em>c</em></sub>(<em>g</em>) = <em>f</em></span>
+is called the left adjunct of <span
+class="math inline"><em>g</em></span></p>
+</section>
+<section id="adjunctions-as-unit-and-counit" class="slide level1">
+<h1>Adjunctions as unit and counit</h1>
+<p><img src="adjunctions-unit-counit.svg" class="center" align=middle height=350></p>
+<p><strong>Definition A2</strong>: An adjunction between functors
+<code>L: C → D</code> and <code>R: D → C</code> is a pair of natural
+transformations</p>
+<p><span
+class="math inline"><em>η</em> : <em>I</em><sub><em>D</em></sub> → <em>R</em> ∘ <em>L</em></span>,
+called unit,</p>
+<p><span
+class="math inline"><em>ε</em> : <em>L</em> ∘ <em>R</em> → <em>I</em><sub><em>C</em></sub></span>,
+called counit,</p>
+<p>such that the following identities hold: <span
+class="math inline"><em>ε</em> ∘ <em>L</em> ⋅ <em>L</em> ∘ <em>η</em> = <em>L</em></span>,
+<span
+class="math inline"><em>R</em> ∘ <em>ε</em> ⋅ <em>η</em> ∘ <em>R</em></span>,
+known as the triangle identities</p>
+</section>
+<section id="unit-counit-to-hom-set-isomorphism" class="slide level1">
+<h1>Unit-counit to hom-set isomorphism</h1>
+<p><img src="adjunctions-general.svg" class="center" align=middle height=350></p>
+<p>2 → 1: Given the natural transformations <span
+class="math inline"><em>η</em></span> and <span
+class="math inline"><em>ε</em></span>, the hom-set isomorphism is
+obtained as</p>
+<p><span
+class="math inline"><em>φ</em><sub><em>d</em>, <em>c</em></sub>(<em>f</em>) = <em>R</em><em>f</em> ⋅ <em>η</em><sub><em>d</em></sub></span>,</p>
+<p><span
+class="math inline"><em>ψ</em><em>d</em>, <em>c</em>(<em>g</em>) = <em>ε</em><sub><em>c</em></sub> ⋅ <em>L</em><em>g</em></span>.</p>
+</section>
+<section id="hom-set-isomorphism-to-unit-counit" class="slide level1">
+<h1>Hom-set isomorphism to unit-counit</h1>
+<p><img src="adjunctions-unit.svg" class="center" align=middle height=350></p>
+<p>1 → 2: Given the natural transformation <span
+class="math inline"><em>φ</em></span>, the unit of the adjunction is
+obtained as follows:</p>
+<p>Set <span
+class="math inline"><em>c</em> = <em>L</em><em>d</em></span> in the
+previous diagram and consider the isomorphishm between hom-sets <span
+class="math inline"><em>C</em>(<em>L</em><em>d</em>, <em>L</em><em>d</em>)</span>
+and <span
+class="math inline"><em>D</em>(<em>d</em>, <em>R</em><em>L</em><em>d</em>)</span>.</p>
+<p>There is always at least one morphism in <span
+class="math inline"><em>C</em>(<em>L</em><em>d</em>, <em>L</em><em>d</em>)</span>
+called <span
+class="math inline"><em>i</em><em>d</em><sub><em>L</em><em>d</em></sub></span>,
+it corresponds to the component of the unit <span
+class="math inline"><em>η</em><sub><em>d</em></sub> ∈ <em>D</em>(<em>d</em>, <em>R</em><em>L</em><em>d</em>)</span>.</p>
+<p>Thus for any <span
+class="math inline"><em>d</em> ∈ <em>D</em></span>, <span
+class="math inline"><em>η</em><sub><em>d</em></sub> = <em>φ</em><sub><em>d</em>, <em>L</em><em>d</em></sub>(<em>i</em><em>d</em><sub><em>L</em><em>d</em></sub>)</span></p>
+</section>
+<section id="hom-set-isomorphism-to-unit-counit-1" class="slide level1">
+<h1>Hom-set isomorphism to unit-counit</h1>
+<p><img src="adjunctions-counit.svg" class="center" align=middle height=350></p>
+<p>1 → 2: Given the natural transformation <span
+class="math inline"><em>ψ</em></span>, the counit of the adjunction is
+obtained as follows:</p>
+<p>Set <span
+class="math inline"><em>d</em> = <em>R</em><em>c</em></span> in the
+previous diagram and consider the isomorphishm between hom-sets <span
+class="math inline"><em>D</em>(<em>R</em><em>c</em>, <em>R</em><em>c</em>)</span>
+and <span
+class="math inline"><em>C</em>(<em>L</em><em>R</em><em>c</em>, <em>c</em>)</span>.</p>
+<p>There is always at least one morphism in <span
+class="math inline"><em>D</em>(<em>R</em><em>c</em>, <em>R</em><em>c</em>)</span>
+called <span
+class="math inline"><em>i</em><em>d</em><sub><em>R</em><em>c</em></sub></span>,
+it corresponds to the component of the counit <span
+class="math inline"><em>ε</em><sub><em>c</em></sub> ∈ <em>C</em>(<em>L</em><em>R</em><em>c</em>, <em>c</em>)</span>.</p>
+<p>Thus for any <span
+class="math inline"><em>c</em> ∈ <em>C</em></span>, <span
+class="math inline"><em>ε</em><sub><em>d</em></sub> = <em>ψ</em><sub><em>R</em><em>c</em>, <em>c</em></sub>(<em>i</em><em>d</em><sub><em>R</em><em>c</em></sub>)</span></p>
+</section>
+<section id="monad-and-comonad" class="slide level1">
+<h1>Monad and comonad</h1>
+<p>Every adjunction <span
+class="math inline"><em>L</em> ⊣ <em>R</em></span> induces</p>
+<ul>
+<li>a monad <span
+class="math inline">(<em>R</em><em>L</em>, <em>η</em> : <em>I</em> → <em>R</em><em>L</em>, <em>R</em> ∘ <em>ε</em> ∘ <em>L</em> : <em>R</em><em>L</em><em>R</em><em>L</em> → <em>R</em><em>L</em>)</span></li>
+<li>a comonad <span
+class="math inline">(<em>L</em><em>R</em>, <em>ε</em> : <em>L</em><em>R</em> → <em>I</em>, <em>L</em> ∘ <em>η</em> ∘ <em>R</em> : <em>L</em><em>R</em> → <em>L</em><em>R</em><em>L</em><em>R</em>)</span></li>
+</ul>
+</section>
+<section id="categorical-product" class="slide level1">
+<h1>Categorical product</h1>
+<p><img src="adjunctions-product.svg" class="center" align=middle height=350></p>
+<p><strong>The product (bi)functor is defined as the right adjoint to
+the diagonal functor: <span
+class="math inline"><em>Δ</em> ⊣ ×</span>.</strong></p>
+<p>The traditional definition of the product object is as follows:</p>
+<p>A product of two objects <span class="math inline"><em>a</em></span>
+and <span class="math inline"><em>b</em></span> is the object <span
+class="math inline"><em>a</em> × <em>b</em></span> equipped with two
+projections <span class="math inline"><em>π</em><sub>1</sub></span> and
+<span class="math inline"><em>π</em><sub>2</sub></span></p>
+<p>such that for any other object <span
+class="math inline"><em>d</em></span> equipped with two projections
+<span class="math inline"><em>f</em><sub>1</sub></span> and <span
+class="math inline"><em>f</em><sub>2</sub></span> there is a unique
+morphism <span class="math inline"><em>g</em></span> that factorizes
+those projections: <span
+class="math inline"> &lt; <em>f</em><sub>1</sub>, <em>f</em><sub>2</sub> &gt;  =  &lt; <em>π</em><sub>1</sub>, <em>π</em><sub>2</sub> &gt; ⋅<em>Δ</em><em>g</em></span></p>
+</section>
+<section id="categorical-sum" class="slide level1">
+<h1>Categorical sum</h1>
+<p><img src="adjunctions-sum.svg" class="center" align=middle height=350></p>
+<p><strong>The coproduct (bi)functor is defined as the left adjoint to
+the diagonal functor: <span
+class="math inline">+ ⊣ <em>Δ</em></span>.</strong></p>
+<p>The traditional definition of the coproduct object is as follows:</p>
+<p>A coproduct of two objects <span
+class="math inline"><em>a</em></span> and <span
+class="math inline"><em>b</em></span> is the object <span
+class="math inline"><em>a</em> + <em>b</em></span> equipped with two
+injections <span class="math inline"><em>i</em><sub>1</sub></span> and
+<span class="math inline"><em>i</em><sub>2</sub></span></p>
+<p>such that for any other object <span
+class="math inline"><em>c</em></span> equipped with two projections
+<span class="math inline"><em>g</em><sub>1</sub></span> and <span
+class="math inline"><em>g</em><sub>2</sub></span> there is a unique
+morphism <span class="math inline"><em>f</em></span> that factorizes
+those projections: <span
+class="math inline"> &lt; <em>g</em><sub>1</sub>, <em>g</em><sub>2</sub> &gt;  = <em>Δ</em><em>f</em>⋅ &lt; <em>π</em><sub>1</sub>, <em>π</em><sub>2</sub>&gt;</span></p>
+</section>
+<section id="categorical-exponential" class="slide level1">
+<h1>Categorical exponential</h1>
+<p><img src="adjunctions-exponential.svg" class="center" align=middle height=350></p>
+<p><strong>The functor of exponentiation to <span
+class="math inline"><em>s</em></span> is defined as the right adjoint to
+the functor of product with <span class="math inline"><em>s</em></span>:
+<span class="math inline">− × <em>s</em> ⊣ <em>s</em> ⇒ −</span>.
+</strong></p>
+<p>When <span class="math inline"><em>C</em></span> is <span
+class="math inline"><em>S</em><em>e</em><em>t</em></span> (or <span
+class="math inline"><em>H</em><em>a</em><em>s</em><em>k</em></span>):</p>
+<ul>
+<li><span class="math inline"><em>φ</em></span> is
+<code>curry</code></li>
+<li><span class="math inline"><em>ψ</em></span> is
+<code>uncurry</code></li>
+<li><span class="math inline"><em>η</em></span> is the unit of the
+<code>State s</code> monad</li>
+<li><span class="math inline"><em>ε</em></span> is the counit of the
+<code>Store s</code> comonad</li>
+<li><span class="math inline"><em>ε</em></span> is also
+<code>uncurry ($)</code>, function application</li>
+</ul>
+</section>
+<section id="free-monoid" class="slide level1">
+<h1>Free monoid</h1>
+<p><img src="adjunctions-fm-list.svg" class="center" align=middle height=350></p>
+<p><strong>The free monoid on a set <span
+class="math inline"><em>a</em></span> is defined as the image of <span
+class="math inline"><em>a</em></span> under the left adjoint to the
+functor <span class="math inline"><em>U</em></span> that forgets the
+monoidal structure.</strong></p>
+<p>Traditional definition: the free monoid over set <span
+class="math inline"><em>a</em></span> is <span
+class="math inline">[<em>a</em>]</span> (together with the function
+<span class="math inline"><em>η</em><sub><em>a</em></sub></span>) if and
+only if there is a unique morphism <code>foldMap g</code> to any other
+monoid m (together with the function g) that satisfies the factorization
+property: <span
+class="math inline"><em>g</em> = <em>f</em><em>o</em><em>l</em><em>d</em><em>M</em><em>a</em><em>p</em><em>g</em>.<em>η</em><sub><em>a</em></sub></span></p>
+</section>
+<section id="list-is-not-a-free-monoid" class="slide level1">
+<h1>List is not a free monoid</h1>
+<p>Lists and <code>Seq</code>s and <code>Vector</code>s should all be
+free monoids but unfortunately they are not since each of them <a
+href="http://comonad.com/reader/2015/free-monoids-in-haskell/">behaves
+differently for infinite sequences</a>.</p>
+<p>Here is the actual <a
+href="https://gist.github.com/prutz1311/fdd11a5374038c5957d701c32d8d98c0">free
+monoid</a>:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">FM</span> a <span class="ot">=</span> <span class="dt">FM</span> {<span class="ot"> unFM ::</span> <span class="kw">forall</span> m<span class="op">.</span> <span class="dt">Monoid</span> m <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m) <span class="ot">-&gt;</span> m }</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ot">embed ::</span> <span class="kw">forall</span> a<span class="op">.</span> a <span class="ot">-&gt;</span> <span class="dt">FM</span> a</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>embed x <span class="ot">=</span> <span class="dt">FM</span> <span class="op">$</span> \k <span class="ot">-&gt;</span> k x</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Semigroup</span> (<span class="dt">FM</span> a) <span class="kw">where</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ot">  (&lt;&gt;) ::</span> <span class="dt">FM</span> a <span class="ot">-&gt;</span> <span class="dt">FM</span> a <span class="ot">-&gt;</span> <span class="dt">FM</span> a</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">FM</span> e1 <span class="op">&lt;&gt;</span> <span class="dt">FM</span> e2 <span class="ot">=</span> <span class="dt">FM</span> <span class="op">$</span> \k <span class="ot">-&gt;</span> e1 k <span class="op">&lt;&gt;</span> e2 k</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Monoid</span> (<span class="dt">FM</span> a) <span class="kw">where</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ot">  mempty ::</span> <span class="dt">FM</span> a</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mempty</span> <span class="ot">=</span> <span class="dt">FM</span> <span class="op">$</span> \_ <span class="ot">-&gt;</span> <span class="fu">mempty</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Foldable</span> <span class="dt">FM</span> <span class="kw">where</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ot">  foldMap ::</span> <span class="kw">forall</span> m a<span class="op">.</span> <span class="dt">Monoid</span> m <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m) <span class="ot">-&gt;</span> <span class="dt">FM</span> a <span class="ot">-&gt;</span> m</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">foldMap</span> f (<span class="dt">FM</span> e) <span class="ot">=</span> e f</span></code></pre></div>
+</section>
+<section id="list-is-not-a-free-monoid-1" class="slide level1">
+<h1>List is not a free monoid</h1>
+<p><img src="adjunctions-fm-proper.svg" class="center" align=middle height=350></p>
+</section>
+<section id="free-monad" class="slide level1">
+<h1>Free monad</h1>
+<p><img src="adjunctions-free.svg" class="center" align=middle height=350></p>
+<p>The free monad for a functor <span
+class="math inline"><em>f</em></span> is its image under the left
+adjoint to the functor that forgets the monadic structure.</p>
+</section>
+<section id="cofree-comonad" class="slide level1">
+<h1>Cofree comonad</h1>
+<p><img src="adjunctions-cofree.svg" class="center" align=middle height=350></p>
+<p>The cofree comonad for a functor <span
+class="math inline"><em>f</em></span> is its image under the right
+adjoint to the functor that forgets the comonadic structure.</p>
+</section>
+<section id="conclusion" class="slide level1">
+<h1>Conclusion</h1>
+<p>A lot of concepts are adjunctions.</p>
+<blockquote>
+<p>The slogan is "Adjoint functors arise everywhere". - Saunders Mac
+Lane, "Categories for the Working Mathematician"</p>
+</blockquote>
+<script defer src=adjunctions.js></script>
+</script>
+<link rel="stylesheet" href="/home/oleg/junk/rjs/reveal.js-master/dist/theme/white.css" />
+<style type="text/css">
+:root { --r-heading-text-transform: none; --r-main-font-size: 20px; --r-heading1-size: 48px; }
+h1 { text-transform: lowercase; }
+p { text-align: left; }
+ul { text-align: left; }
+li { text-align: left; }
+img.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto; 
+}
+code { font-size: 18px; }
+</style>
+</section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // reveal.js plugins
+        plugins: [
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
